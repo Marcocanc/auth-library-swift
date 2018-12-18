@@ -34,11 +34,7 @@ func main() throws {
                 "https://www.googleapis.com/auth/cloud-platform"]
   
   var tokenProvider : TokenProvider
-  #if os(OSX)
-    tokenProvider = BrowserTokenProvider(credentials:CLIENT_CREDENTIALS, token:TOKEN)!
-  #else
-    tokenProvider = DefaultTokenProvider(scopes:scopes)!
-  #endif
+  tokenProvider = DefaultTokenProvider(scopes:scopes)!
   
   if USE_SERVICE_ACCOUNT {
     if #available(OSX 10.12, *) {
@@ -52,14 +48,6 @@ func main() throws {
   }
   
   let google = try GoogleSession(tokenProvider:tokenProvider)
-  
-  if arguments[1] == "login" {
-    #if os(OSX)
-      let browserTokenProvider = tokenProvider as! BrowserTokenProvider
-      try browserTokenProvider.signIn(scopes:scopes)
-      try browserTokenProvider.saveToken(TOKEN)
-    #endif
-  }
   
   if arguments[1] == "me" {
     try google.getMe()
